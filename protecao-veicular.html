@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Car Proteção Veicular</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1548159746657262');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1548159746657262&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --black:    #060810;
+      --graphite: #0d1017;
+      --iron:     #111520;
+      --steel:    #1a2030;
+      --gold:     #1a6ef5;
+      --gold-lt:  #4d8ff7;
+      --gold-dk:  #0f4bbf;
+      --white:    #f0f4ff;
+      --muted:    #7a88a8;
+      --danger:   #e05252;
+      --radius:   6px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── UTILITY ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .gold { color: var(--gold); }
+    .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+    .muted { color: var(--muted); }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,11,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(26,110,245,0.18);
+      padding: 14px 0;
+    }
+    nav .inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+    .logo span { color: var(--gold); }
+    nav a.cta-nav {
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 9px 20px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    nav a.cta-nav:hover { background: var(--gold-lt); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      overflow: hidden;
+    }
+
+    /* diagonal split background */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(125deg, var(--black) 52%, var(--iron) 52%);
+      z-index: -2;
+    }
+
+    /* gold accent line */
+    .hero-accent {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    }
+
+    /* glow orb */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -10%; right: -5%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(26,110,245,0.14) 0%, transparent 70%);
+      z-index: -1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--gold);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 7vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    .hero h1 .line-gold { color: var(--gold); }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: #90a0c0;
+      max-width: 460px;
+      margin-bottom: 36px;
+      line-height: 1.75;
+    }
+
+    .trust-row {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .trust-item strong {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    .trust-item span {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── FORM CARD ── */
+    .form-card {
+      background: var(--iron);
+      border: 1px solid rgba(26,110,245,0.25);
+      border-radius: 12px;
+      padding: 36px 32px;
+      position: relative;
+      box-shadow: 0 0 60px rgba(0,0,0,0.6);
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 24px; right: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      border-radius: 99px;
+
+    }
+
+    .form-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .form-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      background: var(--steel);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+    }
+    .field input::placeholder { color: #3a4a68; }
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(26,110,245,0.15);
+    }
+    .field select { cursor: pointer; }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: var(--radius);
+      padding: 16px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-submit:hover { background: var(--gold-lt); transform: translateY(-1px); }
+    .btn-submit:hover::after { transform: translateX(100%); }
+    .btn-submit:active { transform: translateY(0); }
+
+    .form-guarantee {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+    .form-guarantee svg { color: var(--gold); flex-shrink: 0; }
+
+    /* ── PAIN SECTION ── */
+    .pain {
+      padding: 100px 0;
+      position: relative;
+    }
+    .pain::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--graphite);
+      z-index: -1;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .pain h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      line-height: 1.0;
+      max-width: 700px;
+      margin-bottom: 20px;
+    }
+
+    .pain-intro {
+      font-size: 1.05rem;
+      color: #8090b0;
+      max-width: 560px;
+      margin-bottom: 56px;
+      line-height: 1.75;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .pain-card {
+      background: var(--iron);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .pain-card:hover { border-color: rgba(26,110,245,0.3); }
+    .pain-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--danger);
+      opacity: 0.6;
+    }
+
+    .pain-icon {
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+    .pain-card h3 {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+    .pain-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ── BENEFITS ── */
+    .benefits {
+      padding: 100px 0;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .benefits h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1.0;
+      margin-bottom: 16px;
+    }
+    .benefits-lead {
+      font-size: 1rem;
+      color: #8090b0;
+      line-height: 1.75;
+      margin-bottom: 40px;
+      max-width: 440px;
+    }
+
+    .benefit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .benefit-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .benefit-icon {
+      width: 40px; height: 40px;
+      background: rgba(26,110,245,0.1);
+      border: 1px solid rgba(26,110,245,0.28);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .benefit-item h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .benefit-item p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* stats panel */
+    .stats-panel {
+      background: var(--iron);
+      border: 1px solid rgba(26,110,245,0.2);
+      border-radius: 12px;
+      padding: 40px 36px;
+      position: sticky;
+      top: 100px;
+    }
+    .stat-block {
+      padding: 28px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .stat-block:last-child { border-bottom: none; padding-bottom: 0; }
+    .stat-block:first-child { padding-top: 0; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: 0.04em;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      padding: 100px 0;
+      background: var(--graphite);
+    }
+    .how h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: calc(12.5%);
+      right: calc(12.5%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .step {
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+    }
+    .step-num {
+      width: 56px; height: 56px;
+      background: var(--gold);
+      color: var(--black);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .step h4 {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials {
+      padding: 100px 0;
+    }
+    .testimonials h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testi-card {
+      background: var(--iron);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 28px 24px;
+      transition: border-color 0.2s;
+    }
+    .testi-card:hover { border-color: rgba(26,110,245,0.3); }
+    .stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 14px; }
+    .testi-text {
+      font-size: 0.88rem;
+      color: #aabbd8;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .testi-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testi-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--gold-dk);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--white);
+    }
+    .testi-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .testi-car {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      padding: 100px 0;
+      background: var(--graphite);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 400px;
+      background: radial-gradient(ellipse, rgba(26,110,245,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-final h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      line-height: 1;
+      margin-bottom: 16px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-final p {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .cta-final .btn-big {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 18px 48px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .cta-final .btn-big:hover { background: var(--gold-lt); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer .logo { font-size: 1.1rem; }
+    footer p { font-size: 0.78rem; color: var(--muted); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--iron);
+      border: 1px solid rgba(26,110,245,0.3);
+      border-radius: 12px;
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+    .modal-icon { font-size: 2.8rem; margin-bottom: 16px; }
+    .modal h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--gold);
+    }
+    .modal p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 18px;
+      background: none; border: none;
+      color: var(--muted); font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .form-card { order: -1; }
+      .pain-grid { grid-template-columns: 1fr 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .stats-panel { position: static; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .steps::before { display: none; }
+      .testi-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 10px; text-align: center; }
+    }
+    @media (max-width: 560px) {
+      .pain-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .trust-row { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container inner">
+    <div class="logo">Smart Car<span>Consultor Juliano</span></div>
+    <a href="#cotacao" class="cta-nav">Cotar Agora</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-accent"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <!-- Left -->
+      <div>
+        <div class="hero-eyebrow">Proteção Veicular Premium</div>
+        <h1>
+          SEU CARRO<br>
+          <span class="line-gold">PROTEGIDO.</span><br>
+          SEU BOLSO<br>PRESERVADO.
+        </h1>
+        <p class="hero-sub">
+          Cobertura real, sem letras miúdas e sem sumiço na hora H. 
+          Aprovação em até 24h e atendimento humanizado 24/7.
+        </p>
+        <div class="trust-row">
+          <div class="trust-item">
+            <strong>4.800+</strong>
+            <span>Veículos protegidos</span>
+          </div>
+          <div class="trust-item">
+            <strong>24h</strong>
+            <span>Atendimento</span>
+          </div>
+          <div class="trust-item">
+            <strong>98%</strong>
+            <span>Satisfação</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-card" id="cotacao">
+        <div class="form-title">Cotação Gratuita</div>
+        <div class="form-sub">Preencha e receba sua proposta em minutos</div>
+        <form id="leadForm" onsubmit="handleSubmit(event)">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="nome" placeholder="Seu nome" required />
+          </div>
+          <div class="field">
+            <label>WhatsApp</label>
+            <input type="tel" id="whatsapp" placeholder="(00) 00000-0000" required />
+          </div>
+          <div class="field">
+            <label>Veículo</label>
+            <select id="veiculo" required>
+              <option value="" disabled selected>Selecione seu veículo</option>
+              <option>Carro de passeio</option>
+              <option>SUV / Crossover</option>
+              <option>Caminhonete / Pickup</option>
+              <option>Moto</option>
+              <option>Van / Minivan</option>
+              <option>Caminhão</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-submit">
+            Quero minha cotação gratuita →
+          </button>
+        </form>
+        <div class="form-guarantee">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Seus dados estão seguros. Sem spam, sem compromisso.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <div class="section-label">O problema</div>
+    <h2>O SEGURO TRADICIONAL<br><span class="gold">FALHOU COM VOCÊ?</span></h2>
+    <p class="pain-intro">
+      Você paga a parcela todo mês. Mas quando precisa, descobre que a proteção tinha mais buracos do que cobertura.
+    </p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-icon">💸</div>
+        <h3>Franquias absurdas</h3>
+        <p>Na hora do sinistro, você ainda paga um valor alto do próprio bolso. Proteção que não protege de verdade.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📵</div>
+        <h3>Atendimento que some</h3>
+        <p>Horas de espera, transferências infinitas e ninguém que resolve. Exatamente quando você mais precisa.</p>
+      </div>
+      <div class="pain-card">
+        <div class="pain-icon">📄</div>
+        <h3>Letras miúdas</h3>
+        <p>O contrato cobre tudo — exceto o que aconteceu com você. Exclusões escondidas em páginas que ninguém lê.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <div class="container">
+    <div class="benefits-grid">
+      <div>
+        <div class="section-label">A solução</div>
+        <h2>PROTEÇÃO QUE<br><span class="gold">FUNCIONA DE VERDADE</span></h2>
+        <p class="benefits-lead">
+          Construída para quem precisa de amparo real — não de burocracia. 
+          Cada benefício foi pensado para que você nunca fique na mão.
+        </p>
+        <div class="benefit-list">
+          <div class="benefit-item">
+            <div class="benefit-icon">🛡️</div>
+            <div>
+              <h4>Cobertura total contra roubo e furto</h4>
+              <p>Proteção integral do veículo em todo o território nacional, sem restrições de bairro ou horário.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🔧</div>
+            <div>
+              <h4>Danos por colisão e terceiros</h4>
+              <p>Colisão, incêndio, alagamento e danos a terceiros com assistência imediata acionada em minutos.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🚐</div>
+            <div>
+              <h4>Guincho 24h sem franquia</h4>
+              <p>Pane seca, pneu furado ou acidente — o guincho é enviado sem custo adicional, a qualquer hora.</p>
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🏥</div>
+            <div>
+              <h4>Carro reserva e assistência</h4>
+              <p>Enquanto o seu está na oficina, você não fica a pé. Carro reserva disponível sem burocracia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats panel -->
+      <div class="stats-panel">
+        <div class="stat-block">
+          <div class="stat-num">4.800+</div>
+          <div class="stat-label">Veículos atualmente protegidos</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">&lt; 24h</div>
+          <div class="stat-label">Tempo médio de aprovação</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">98%</div>
+          <div class="stat-label">Taxa de satisfação dos clientes</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">12min</div>
+          <div class="stat-label">Tempo médio de resposta ao acionamento</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Franquia no guincho e assistência</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="container">
+    <div class="section-label" style="text-align:center; margin-bottom:8px;">Como funciona</div>
+    <h2>SIMPLES ASSIM</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Preencha o formulário</h4>
+        <p>Nome, WhatsApp e tipo de veículo. Leva menos de 60 segundos.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Receba a proposta</h4>
+        <p>Um consultor entra em contato com sua cotação personalizada via WhatsApp.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Aprovação em 24h</h4>
+        <p>Análise rápida sem burocracia. Aprovamos em até um dia útil.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Protegido agora</h4>
+        <p>Cobertura ativada imediatamente após confirmação. Sem espera.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-label" style="text-align:center; margin-bottom:8px;">Depoimentos</div>
+    <h2>QUEM JÁ ESTÁ<br><span class="gold">PROTEGIDO</span></h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Meu Corolla foi roubado na segunda-feira. Na quarta já tinha a aprovação do sinistro. Nunca imaginei que proteção veicular pudesse funcionar tão rápido."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">RC</div>
+          <div>
+            <div class="testi-name">Rafael C.</div>
+            <div class="testi-car">Toyota Corolla 2022</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"O guincho chegou em 18 minutos quando bati na estrada. Sem fila de atendimento, sem custo extra. Isso é o que eu chamo de proteção de verdade."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">MS</div>
+          <div>
+            <div class="testi-name">Mariana S.</div>
+            <div class="testi-car">Hyundai Creta 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <div class="testi-text">"Paguei seguro por 6 anos num banco e nunca usei. Aqui, quando precisei pela primeira vez, foi aprovado na hora. Valor menor e cobertura maior."</div>
+        <div class="testi-author">
+          <div class="testi-avatar">JA</div>
+          <div>
+            <div class="testi-name">João A.</div>
+            <div class="testi-car">Chevrolet Onix 2021</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="container">
+    <div class="section-label">Não espere acontecer</div>
+    <h2>GARANTA SUA<br><span class="gold">PROTEÇÃO AGORA</span></h2>
+    <p>O seu carro sai todo dia. O risco existe todo dia. A proteção precisa começar hoje.</p>
+    <a href="#cotacao" class="btn-big">Solicitar cotação gratuita →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; width:100%;">
+    <div class="logo">Smart Car<span style="color:var(--gold)">Consultor Juliano</span></div>
+    <p>© 2026 Smart Car. Todos os direitos reservados.</p>
+    <p style="font-size:0.72rem; color:#3a4a68;">Proteção veicular — não é seguro regulado pela SUSEP.</p>
+  </div>
+</footer>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon">✅</div>
+    <h3>Solicitação Enviada!</h3>
+    <p>Recebemos seus dados. Um consultor vai entrar em contato via WhatsApp em breve com sua cotação personalizada.</p>
+  </div>
+</div>
+
+<script>
+  // ── UTM CAPTURE ─────────────────────────────────────────────
+  // Lê UTMs da URL e persiste em sessionStorage para não perder em redirects
+  (function captureUTMs() {
+    const params = new URLSearchParams(window.location.search);
+    const keys = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+    keys.forEach(k => {
+      const v = params.get(k);
+      if (v) sessionStorage.setItem(k, v);
+    });
+  })();
+
+  function getUTMs() {
+    return {
+      utm_source:   sessionStorage.getItem('utm_source')   || '',
+      utm_medium:   sessionStorage.getItem('utm_medium')   || '',
+      utm_campaign: sessionStorage.getItem('utm_campaign') || '',
+      utm_content:  sessionStorage.getItem('utm_content')  || '',
+      utm_term:     sessionStorage.getItem('utm_term')     || '',
+    };
+  }
+
+  // ── GOOGLE APP SCRIPT URL ────────────────────────────────────
+  // Cole aqui a URL gerada após publicar o script como Web App
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbzooyZrquhY88FZkF3Grd6hNtGMATxBwP_vz7LfhOkgE9-SLaM_Jua66myOyPivuytd/exec';
+
+  // ── WHATSAPP ─────────────────────────────────────────────────
+  const WA_NUMBER = '5587996373456';
+  const WA_MSG    = encodeURIComponent('olá, quero realizar a consulta da cotação.');
+
+  // ── WHATSAPP MASK ────────────────────────────────────────────
+  const wpp = document.getElementById('whatsapp');
+  wpp.addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, '').substring(0, 11);
+    if (v.length > 6) v = `(${v.substring(0,2)}) ${v.substring(2,7)}-${v.substring(7)}`;
+    else if (v.length > 2) v = `(${v.substring(0,2)}) ${v.substring(2)}`;
+    else if (v.length > 0) v = `(${v}`;
+    this.value = v;
+  });
+
+  // ── FORM SUBMIT ──────────────────────────────────────────────
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const nome    = document.getElementById('nome').value.trim();
+    const wppVal  = document.getElementById('whatsapp').value.trim();
+    const veiculo = document.getElementById('veiculo').value;
+    const utms    = getUTMs();
+
+    const payload = {
+      nome,
+      whatsapp: wppVal,
+      veiculo,
+      ...utms,
+      timestamp: new Date().toISOString(),
+      page_url:  window.location.href,
+    };
+
+    // ── 1. Enviar para Google App Script (sem bloquear o fluxo) ──
+    fetch(GAS_URL, {
+      method:  'POST',
+      mode:    'no-cors',          // GAS exige no-cors para evitar preflight
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    }).catch(() => {}); // falha silenciosa — não interrompe o usuário
+
+    // ── 2. Meta Pixel: Lead ──────────────────────────────────────
+    fbq('track', 'Lead');
+
+    // ── 3. Meta Pixel: CompleteRegistration ──────────────────────
+    fbq('track', 'CompleteRegistration');
+
+    // ── 4. Abrir modal de confirmação ────────────────────────────
+    document.getElementById('modal').classList.add('open');
+    e.target.reset();
+
+    // ── 5. Redirecionar para WhatsApp após 1.8s ──────────────────
+    setTimeout(() => {
+      window.open(`https://wa.me/${WA_NUMBER}?text=${WA_MSG}`, '_blank');
+    }, 1800);
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
